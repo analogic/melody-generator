@@ -1,4 +1,4 @@
-Wave generator library (sound generation)
-=========================================
+Melody generator library
+========================
 
-Attempt to make sound generation on MCU little easier. See https://analogic.github.io/wave-generator/
+Generating sequenced buffers of melody via wave generator(https://analogic.github.io/wave-generator/). Please see https://analogic.github.io/melody-generator/

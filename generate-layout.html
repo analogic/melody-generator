@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Wave generator output</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <style>
+        pre { background-color: #eee; margin: 1rem 0; font-size: 80%; padding: 0.5rem 1rem; }
+        .example { margin: 2rem 0 3rem 0; font-size: 90%; }
+        .example .content { padding-left: 1rem; border-left: 0.3rem solid #eee; margin-left: 0.3rem; }
+        audio { width: 100%; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="navbar navbar-dark bg-dark shadow-sm">
+        <div class="container">
+            <a href="#" class="navbar-brand d-flex align-items-center">
+                ∿ &nbsp;
+                <strong>melody generator</strong>
+            </a>
+            <a style="color: white; text-decoration: none;" href="https://github.com/analogic/melody-generator"><span class="d-none d-sm-inline">View on GitHub </span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-mark-github" aria-hidden="true"><path fill-rule="evenodd" fill="#ffffff" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="container">
+        <br />
+        <p>
+            Melody generator based on <a href="https://analogic.github.io/wave-generator/">wave_generator</a> project. Main target is generating sound for NRF52 via I2S amplifier but given a nature of library it should work as hardware independent in more generic projects. Please do not use it as dependency (it might change in breaking way) just copy or fork this library and adjust code as you need.
+        </p>
+
+        ${body}
+    </div>
+</main>
+
+</body>

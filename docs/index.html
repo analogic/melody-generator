@@ -21,9 +21,9 @@
         <div class="container">
             <a href="#" class="navbar-brand d-flex align-items-center">
                 ∿ &nbsp;
-                <strong>wave generator</strong>
+                <strong>melody generator</strong>
             </a>
-            <a style="color: white; text-decoration: none;" href="https://github.com/analogic/wave-generator"><span class="d-none d-sm-inline">View on GitHub </span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-mark-github" aria-hidden="true"><path fill-rule="evenodd" fill="#ffffff" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a>
+            <a style="color: white; text-decoration: none;" href="https://github.com/analogic/melody-generator"><span class="d-none d-sm-inline">View on GitHub </span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-mark-github" aria-hidden="true"><path fill-rule="evenodd" fill="#ffffff" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a>
         </div>
     </div>
 </header>
@@ -32,10 +32,162 @@
     <div class="container">
         <br />
         <p>
-        Simple LUT(lookup table) MCU friendly library for generating waves. Main target is generating sound for NRF52 via I2S amplifier but given a nature of library it should work as hardware independent in more generic projects. Please do not use it as dependency (it might change in breaking way) just copy or fork this library and adjust code as you need.
+            Melody generator based on <a href="https://analogic.github.io/wave-generator/">wave_generator</a> project. Main target is generating sound for NRF52 via I2S amplifier but given a nature of library it should work as hardware independent in more generic projects. Please do not use it as dependency (it might change in breaking way) just copy or fork this library and adjust code as you need.
         </p>
 
          <div class="example">
+    <h1>Example bad-coffin-dance.cpp</h1>
+    <div class="content">
+        <img src="bad-coffin-dance.cpp.png" style="width: 100%;"/>
+        <audio controls>
+            <source src="bad-coffin-dance.cpp.wav" type="audio/wav">
+        </audio>
+        <pre><code>// no rising and falling edges of tones, for comparision with click-free version
+
+#include &lt;cstdio&gt;
+#include &lt;melody.h&gt;
+
+#define SAMPLE_RATE 44100
+#define SAMPLE_WIDTH 16
+
+#define BUFF_SIZE SAMPLE_RATE * 28
+
+#define PART_LENGTH 112
+Note part[PART_LENGTH] = {
+        {NOTE_A4, 250, 0},
+        {NOTE_A4, 250, 0},
+        {NOTE_A4, 250, 0},
+        {NOTE_A4, 250, 0},
+        {NOTE_A4, 250, 0},
+        {NOTE_A4, 250, 0},
+        {NOTE_A4, 250, 0},
+        {NOTE_A4, 250, 0},
+        {NOTE_AS4, 250, 0},
+        {NOTE_AS4, 250, 0},
+        {NOTE_AS4, 250, 0},
+        {NOTE_AS4, 250, 0},
+        {NOTE_AS4, 250, 0},
+        {NOTE_AS4, 250, 0},
+        {NOTE_AS4, 250, 0},
+        {NOTE_AS4, 250, 0},
+        {NOTE_AS4, 250, 0},
+        {NOTE_AS4, 250, 0},
+        {NOTE_AS4, 250, 0},
+        {NOTE_AS4, 250, 0},
+        {NOTE_D5,  250, 0},
+        {NOTE_D5,  250, 0},
+        {NOTE_D5,  250, 0},
+        {NOTE_D5,  250, 0},
+        {NOTE_C5,  250, 0},
+        {NOTE_C5,  250, 0},
+        {NOTE_C5,  250, 0},
+        {NOTE_C5,  250, 0},
+        {NOTE_F5,  250, 0},
+        {NOTE_F5,  250, 0},
+        {NOTE_F5,  250, 0},
+        {NOTE_F5,  250, 0},
+        {NOTE_G5,  250, 0},
+        {NOTE_G5,  250, 0},
+        {NOTE_G5,  250, 0},
+        {NOTE_G5,  250, 0},
+        {NOTE_G5,  250, 0},
+        {NOTE_G5,  250, 0},
+        {NOTE_G5,  250, 0},
+        {NOTE_G5,  250, 0},
+        {NOTE_G5,  250, 0},
+        {NOTE_G5,  250, 0},
+        {NOTE_G5,  250, 0},
+        {NOTE_G5,  250, 0},
+        {NOTE_C5,  250, 0},
+        {NOTE_AS4, 250, 0},
+        {NOTE_A4,  250, 0},
+        {NOTE_F4,  250, 0},
+        {NOTE_G4,  250, 0},
+        {0,        250, 0},
+        {NOTE_G4,  250, 0},
+        {NOTE_D5,  250, 0},
+        {NOTE_C5,  250, 0},
+        {0,        250, 0},
+        {NOTE_AS4, 250, 0},
+        {0,        250, 0},
+        {NOTE_A4,  250, 0},
+        {0,        250, 0},
+        {NOTE_A4,  250, 0},
+        {NOTE_A4,  250, 0},
+        {NOTE_C5,  250, 0},
+        {0,        250, 0},
+        {NOTE_AS4, 250, 0},
+        {NOTE_A4,  250, 0},
+        {NOTE_G4,  250, 0},
+        {0,        250, 0},
+        {NOTE_G4,  250, 0},
+        {NOTE_AS5, 250, 0},
+        {NOTE_A5,  250, 0},
+        {NOTE_AS5, 250, 0},
+        {NOTE_A5,  250, 0},
+        {NOTE_AS5, 250, 0},
+        {NOTE_G4,  250, 0},
+        {0,        250, 0},
+        {NOTE_G4,  250, 0},
+        {NOTE_AS5, 250, 0},
+        {NOTE_A5,  250, 0},
+        {NOTE_AS5, 250, 0},
+        {NOTE_A5,  250, 0},
+        {NOTE_AS5, 250, 0},
+        {NOTE_G4,  250, 0},
+        {0,        250, 0},
+        {NOTE_G4,  250, 0},
+        {NOTE_D5,  250, 0},
+        {NOTE_C5,  250, 0},
+        {0,        250, 0},
+        {NOTE_AS4, 250, 0},
+        {0,        250, 0},
+        {NOTE_A4,  250, 0},
+        {0,        250, 0},
+        {NOTE_A4,  250, 0},
+        {NOTE_A4,  250, 0},
+        {NOTE_C5,  250, 0},
+        {0,        250, 0},
+        {NOTE_AS4, 250, 0},
+        {NOTE_A4,  250, 0},
+        {NOTE_G4,  250, 0},
+        {0,        250, 0},
+        {NOTE_G4,  250, 0},
+        {NOTE_AS5, 250, 0},
+        {NOTE_A5,  250, 0},
+        {NOTE_AS5, 250, 0},
+        {NOTE_A5,  250, 0},
+        {NOTE_AS5, 250, 0},
+        {NOTE_G4,  250, 0},
+        {0,        250, 0},
+        {NOTE_G4,  250, 0},
+        {NOTE_AS5, 250, 0},
+        {NOTE_A5,  250, 0},
+        {NOTE_AS5, 250, 0},
+        {NOTE_A5,  250, 0},
+        {NOTE_AS5, 250, 0}
+};
+
+int main(int argc, char **argv) {
+    WaveGenerator waveGenerator(SAMPLE_RATE, SAMPLE_WIDTH, 0.5f);
+    Melody melody(&amp;waveGenerator, &amp;part[0], PART_LENGTH);
+    static uint32_t buff[BUFF_SIZE];
+
+    uint32_t i = 0;
+    while(melody.nextBuffer(&amp;buff[i*4096], 4096)) {
+        i++;
+    }
+
+    for (int z = 0; z &lt; BUFF_SIZE; z++) {
+        printf(&quot;%d\t%d\n&quot;, z, ((int16_t *) buff)[z * 2]);
+    }
+
+    if (argc &gt; 1) {
+       melody.wg-&gt;writeWav(&amp;buff[0], BUFF_SIZE, argv[1]);
+    }
+}</code></pre>
+    </div>
+</div> <div class="example">
     <h1>Example click-free-coffin-dance.cpp</h1>
     <div class="content">
         <img src="click-free-coffin-dance.cpp.png" style="width: 100%;"/>
@@ -188,154 +340,50 @@ int main(int argc, char **argv) {
 }</code></pre>
     </div>
 </div> <div class="example">
-    <h1>Example coffin-dance.cpp</h1>
+    <h1>Example super-mario-kick.cpp</h1>
     <div class="content">
-        <img src="coffin-dance.cpp.png" style="width: 100%;"/>
+        <img src="super-mario-kick.cpp.png" style="width: 100%;"/>
         <audio controls>
-            <source src="coffin-dance.cpp.wav" type="audio/wav">
+            <source src="super-mario-kick.cpp.wav" type="audio/wav">
         </audio>
-        <pre><code>// no rising and falling edges of tones, for comparision with click-free version
+        <pre><code>// small buffer to test &quot;cutting&quot; through notes
 
 #include &lt;cstdio&gt;
+#include &lt;cstring&gt;
 #include &lt;melody.h&gt;
 
-#define SAMPLE_RATE 44100
+#define SAMPLE_RATE 33333
 #define SAMPLE_WIDTH 16
 
-#define BUFF_SIZE SAMPLE_RATE * 28
+#define BUFF_SIZE 3333 // 100 ms
+#define WAV_BUFFER_SIZE SAMPLE_RATE * 1 // 1 second1
 
-#define PART_LENGTH 112
-Note part[PART_LENGTH] = {
-        {NOTE_A4, 250, 0},
-        {NOTE_A4, 250, 0},
-        {NOTE_A4, 250, 0},
-        {NOTE_A4, 250, 0},
-        {NOTE_A4, 250, 0},
-        {NOTE_A4, 250, 0},
-        {NOTE_A4, 250, 0},
-        {NOTE_A4, 250, 0},
-        {NOTE_AS4, 250, 0},
-        {NOTE_AS4, 250, 0},
-        {NOTE_AS4, 250, 0},
-        {NOTE_AS4, 250, 0},
-        {NOTE_AS4, 250, 0},
-        {NOTE_AS4, 250, 0},
-        {NOTE_AS4, 250, 0},
-        {NOTE_AS4, 250, 0},
-        {NOTE_AS4, 250, 0},
-        {NOTE_AS4, 250, 0},
-        {NOTE_AS4, 250, 0},
-        {NOTE_AS4, 250, 0},
-        {NOTE_D5,  250, 0},
-        {NOTE_D5,  250, 0},
-        {NOTE_D5,  250, 0},
-        {NOTE_D5,  250, 0},
-        {NOTE_C5,  250, 0},
-        {NOTE_C5,  250, 0},
-        {NOTE_C5,  250, 0},
-        {NOTE_C5,  250, 0},
-        {NOTE_F5,  250, 0},
-        {NOTE_F5,  250, 0},
-        {NOTE_F5,  250, 0},
-        {NOTE_F5,  250, 0},
-        {NOTE_G5,  250, 0},
-        {NOTE_G5,  250, 0},
-        {NOTE_G5,  250, 0},
-        {NOTE_G5,  250, 0},
-        {NOTE_G5,  250, 0},
-        {NOTE_G5,  250, 0},
-        {NOTE_G5,  250, 0},
-        {NOTE_G5,  250, 0},
-        {NOTE_G5,  250, 0},
-        {NOTE_G5,  250, 0},
-        {NOTE_G5,  250, 0},
-        {NOTE_G5,  250, 0},
-        {NOTE_C5,  250, 0},
-        {NOTE_AS4, 250, 0},
-        {NOTE_A4,  250, 0},
-        {NOTE_F4,  250, 0},
-        {NOTE_G4,  250, 0},
-        {0,        250, 0},
-        {NOTE_G4,  250, 0},
-        {NOTE_D5,  250, 0},
-        {NOTE_C5,  250, 0},
-        {0,        250, 0},
-        {NOTE_AS4, 250, 0},
-        {0,        250, 0},
-        {NOTE_A4,  250, 0},
-        {0,        250, 0},
-        {NOTE_A4,  250, 0},
-        {NOTE_A4,  250, 0},
-        {NOTE_C5,  250, 0},
-        {0,        250, 0},
-        {NOTE_AS4, 250, 0},
-        {NOTE_A4,  250, 0},
-        {NOTE_G4,  250, 0},
-        {0,        250, 0},
-        {NOTE_G4,  250, 0},
-        {NOTE_AS5, 250, 0},
-        {NOTE_A5,  250, 0},
-        {NOTE_AS5, 250, 0},
-        {NOTE_A5,  250, 0},
-        {NOTE_AS5, 250, 0},
-        {NOTE_G4,  250, 0},
-        {0,        250, 0},
-        {NOTE_G4,  250, 0},
-        {NOTE_AS5, 250, 0},
-        {NOTE_A5,  250, 0},
-        {NOTE_AS5, 250, 0},
-        {NOTE_A5,  250, 0},
-        {NOTE_AS5, 250, 0},
-        {NOTE_G4,  250, 0},
-        {0,        250, 0},
-        {NOTE_G4,  250, 0},
-        {NOTE_D5,  250, 0},
-        {NOTE_C5,  250, 0},
-        {0,        250, 0},
-        {NOTE_AS4, 250, 0},
-        {0,        250, 0},
-        {NOTE_A4,  250, 0},
-        {0,        250, 0},
-        {NOTE_A4,  250, 0},
-        {NOTE_A4,  250, 0},
-        {NOTE_C5,  250, 0},
-        {0,        250, 0},
-        {NOTE_AS4, 250, 0},
-        {NOTE_A4,  250, 0},
-        {NOTE_G4,  250, 0},
-        {0,        250, 0},
-        {NOTE_G4,  250, 0},
-        {NOTE_AS5, 250, 0},
-        {NOTE_A5,  250, 0},
-        {NOTE_AS5, 250, 0},
-        {NOTE_A5,  250, 0},
-        {NOTE_AS5, 250, 0},
-        {NOTE_G4,  250, 0},
-        {0,        250, 0},
-        {NOTE_G4,  250, 0},
-        {NOTE_AS5, 250, 0},
-        {NOTE_A5,  250, 0},
-        {NOTE_AS5, 250, 0},
-        {NOTE_A5,  250, 0},
-        {NOTE_AS5, 250, 0}
+#define PART_LENGTH 3
+static Note startupMelody[PART_LENGTH] = {
+    {500, 20, 0},
+    {0, 80, 0},
+    {693, 20, 0}
 };
 
 int main(int argc, char **argv) {
     WaveGenerator waveGenerator(SAMPLE_RATE, SAMPLE_WIDTH, 0.5f);
-    Melody melody(&amp;waveGenerator, &amp;part[0], PART_LENGTH);
+    Melody melody(&amp;waveGenerator, &amp;startupMelody[0], PART_LENGTH);
     static uint32_t buff[BUFF_SIZE];
+    static uint32_t wav[WAV_BUFFER_SIZE];
 
     uint32_t i = 0;
-    while(melody.nextBuffer(&amp;buff[i*4096], 4096)) {
+    uint32_t generated = 0;
+    while(generated = melody.nextBuffer(&amp;buff[0], BUFF_SIZE)) {
+        memcpy(&amp;wav[i * BUFF_SIZE], &amp;buff[0], generated * 4);
         i++;
     }
 
-    for (int z = 0; z &lt; BUFF_SIZE; z++) {
-        printf(&quot;%d\t%d\n&quot;, z, ((int16_t *) buff)[z * 2]);
+    for (int z = 0; z &lt; WAV_BUFFER_SIZE; z++) {
+        printf(&quot;%d\t%d\n&quot;, z, ((int16_t *) wav)[z * 2]);
     }
 
     if (argc &gt; 1) {
-       melody.wg-&gt;writeWav(&amp;buff[0], BUFF_SIZE, argv[1]);
+       melody.wg-&gt;writeWav(&amp;wav[0], WAV_BUFFER_SIZE, argv[1]);
     }
 }</code></pre>
     </div>

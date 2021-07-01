@@ -20,7 +20,7 @@ class Melody {
 public:
     WaveGenerator *wg;
     Melody(WaveGenerator *waveGenerator, Note *definition, uint32_t length);
-    bool nextBuffer(uint32_t *buffer, uint32_t bufferSize);
+    uint32_t nextBuffer(uint32_t *buffer, uint32_t bufferSize);
 private:
     Note *definition;
     uint32_t length;

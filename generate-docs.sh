@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -ex
+##set -ex
 
 cd "$( dirname "${BASH_SOURCE[0]}")"
 

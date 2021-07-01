@@ -1,6 +1,8 @@
+#include <cstring>
 #include "melody.h"
 
 #define SMOOTHING 400
+//#define DEBUG
 
 Melody::Melody(WaveGenerator *waveGenerator, Note *definition, uint32_t length) {
     this->definition = definition;
@@ -11,19 +13,47 @@ Melody::Melody(WaveGenerator *waveGenerator, Note *definition, uint32_t length) 
     this->wg = waveGenerator;
 }
 
-bool Melody::nextBuffer(uint32_t *buffer, uint32_t bufferSize) {
+uint32_t Melody::nextBuffer(uint32_t *buffer, uint32_t bufferSize) {
     uint32_t bufferPosition = 0;
 
+    #ifdef DEBUG
+    printf("nextBuffer(), starting noteIndex: %d =============================================\n", noteIndex);
+    #endif
+
+    if (noteIndex == length) {
+        #ifdef DEBUG
+        printf("end!\n");
+        #endif
+        return 0;
+    }
+
     for(uint32_t i = noteIndex; i < length; i++) {
+        #ifdef DEBUG
+        printf("-> note index: %d\n", i);
+        #endif
         Note note = this->definition[noteIndex];
         uint32_t noteSize = this->wg->ms32size(note.length_ms) - this->noteOffset;
 
         if (noteSize <= (bufferSize - bufferPosition)) {
-            // printf("smaller then buffer\n");
+            #ifdef DEBUG
+            printf("noteSize smaller then buffer, bufferPosition: %d, noteSize: %d, freq: %d\n", bufferPosition, noteSize, note.frequency);
+            #endif
             this->wg->sine(&buffer[bufferPosition], noteSize, note.frequency);
+            #ifdef DEBUG
+            for (int z = bufferPosition; z < bufferPosition + noteSize; z++) {
+                printf("-- %d\t%d\n", z, ((int16_t *) buffer)[z * 2]);
+            }
+            #endif
         } else {
-            // printf("larger then buffer\n");
+            #ifdef DEBUG
+            printf("noteSize larger then buffer, bufferPosition: %d, toEnd: %d, freq: %d\n", bufferPosition, bufferSize - bufferPosition, note.frequency);
+            #endif
             this->wg->sine(&buffer[bufferPosition], bufferSize - bufferPosition, note.frequency);
+            #ifdef DEBUG
+            for (int z = bufferPosition; z < bufferSize; z++) {
+                printf("-- %d\t%d\n", z, ((int16_t *) buffer)[z * 2]);
+            }
+            #endif
         }
 
         // smoothing -----------------------------------------------------------------------------------------------
@@ -57,14 +87,11 @@ bool Melody::nextBuffer(uint32_t *buffer, uint32_t bufferSize) {
             this->noteOffset = 0;
         } else {
             this->noteOffset += bufferSize - bufferPosition;
+            bufferPosition = bufferSize;
             break;
         }
     }
 
-    if (noteIndex == length) {
-        return false;
-    } else {
-        return true;
-    }
+    return bufferPosition;
 }
 

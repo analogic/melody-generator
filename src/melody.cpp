@@ -19,21 +19,21 @@ Melody::Melody(WaveGenerator *waveGenerator, Note *definition, uint32_t length) 
 uint32_t Melody::nextBuffer(uint32_t *buffer, uint32_t bufferSize) {
     uint32_t bufferPosition = 0;
 
-    #ifdef DEBUG
+#ifdef DEBUG
     printf("nextBuffer(), starting noteIndex: %d =============================================\n", noteIndex);
-    #endif
+#endif
 
     if (noteIndex == length || forceStopped) {
-        #ifdef DEBUG
+#ifdef DEBUG
         printf("end!\n");
-        #endif
+#endif
         return 0;
     }
 
-    for(uint32_t i = noteIndex; i < length; i++) {
-        #ifdef DEBUG
+    for (uint32_t i = noteIndex; i < length; i++) {
+#ifdef DEBUG
         printf("-> note index: %d\n", i);
-        #endif
+#endif
         Note note = this->definition[noteIndex];
 
         // if length is 0 we do infinite time
@@ -86,9 +86,10 @@ uint32_t Melody::nextBuffer(uint32_t *buffer, uint32_t bufferSize) {
             if (noteSize - SMOOTHING < bufferSize) {
                 uint32_t smoothingLength = bufferSize - (noteSize - SMOOTHING);
                 if (smoothingLength > SMOOTHING) smoothingLength = SMOOTHING;
-                this->wg->adjustVolume(&buffer[bufferPosition + noteSize - SMOOTHING], smoothingLength, 1.0f, (float)(SMOOTHING - smoothingLength)/SMOOTHING);
+                this->wg->adjustVolume(&buffer[bufferPosition + noteSize - SMOOTHING], smoothingLength, 1.0f,
+                                       (float) (SMOOTHING - smoothingLength) / SMOOTHING);
             } else if (bufferPosition == 0 && noteSize < SMOOTHING) {
-                this->wg->adjustVolume(&buffer[bufferPosition], noteSize, (float)noteSize/SMOOTHING, 0.0f);
+                this->wg->adjustVolume(&buffer[bufferPosition], noteSize, (float) noteSize / SMOOTHING, 0.0f);
             }
         }
 

@@ -357,7 +357,7 @@ int main(int argc, char **argv) {
 #define BUFF_SIZE SAMPLE_RATE * 28
 
 #define PART_LENGTH 1
-Note part[PART_LENGTH] = {{NOTE_A4, 0, 0}};
+Note part[PART_LENGTH] = {{NOTE_A4, 0, EDGE_RISING}};
 
 int main(int argc, char **argv) {
     WaveGenerator waveGenerator(SAMPLE_RATE, SAMPLE_WIDTH, 0.5f);

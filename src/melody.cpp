@@ -43,6 +43,7 @@ uint32_t Melody::nextBuffer(uint32_t *buffer, uint32_t bufferSize) {
         if (newFrequency != 0 && note.length_ms == 0) {
             this->wg->sineTransform(&buffer[bufferPosition], bufferSize, note.frequency, newFrequency);
             this->definition[noteIndex].frequency = newFrequency;
+            this->definition[noteIndex].edge_smoothing = 0;
             newFrequency = 0;
         } else {
             if (noteSize <= (bufferSize - bufferPosition)) {

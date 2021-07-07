@@ -7,10 +7,13 @@
 Melody::Melody(WaveGenerator *waveGenerator, Note *definition, uint32_t length) {
     this->definition = definition;
     this->length = length;
-    this->end = false;
     this->noteIndex = 0;
     this->noteOffset = 0;
     this->wg = waveGenerator;
+
+    this->forceStop = false;
+    this->forceStopped = false;
+    this->newFrequency = 0;
 }
 
 uint32_t Melody::nextBuffer(uint32_t *buffer, uint32_t bufferSize) {
@@ -20,7 +23,7 @@ uint32_t Melody::nextBuffer(uint32_t *buffer, uint32_t bufferSize) {
     printf("nextBuffer(), starting noteIndex: %d =============================================\n", noteIndex);
     #endif
 
-    if (noteIndex == length) {
+    if (noteIndex == length || forceStopped) {
         #ifdef DEBUG
         printf("end!\n");
         #endif
@@ -32,28 +35,37 @@ uint32_t Melody::nextBuffer(uint32_t *buffer, uint32_t bufferSize) {
         printf("-> note index: %d\n", i);
         #endif
         Note note = this->definition[noteIndex];
-        uint32_t noteSize = this->wg->ms32size(note.length_ms) - this->noteOffset;
 
-        if (noteSize <= (bufferSize - bufferPosition)) {
-            #ifdef DEBUG
-            printf("noteSize smaller then buffer, bufferPosition: %d, noteSize: %d, freq: %d\n", bufferPosition, noteSize, note.frequency);
-            #endif
-            this->wg->sine(&buffer[bufferPosition], noteSize, note.frequency);
-            #ifdef DEBUG
-            for (int z = bufferPosition; z < bufferPosition + noteSize; z++) {
-                printf("-- %d\t%d\n", z, ((int16_t *) buffer)[z * 2]);
-            }
-            #endif
+        // if length is 0 we do infinite time
+        uint32_t totalSize = note.length_ms != 0 ? this->wg->ms32size(note.length_ms) : UINT32_MAX;
+        uint32_t noteSize = totalSize - this->noteOffset;
+
+        if (newFrequency != 0 && note.length_ms == 0) {
+            this->wg->sineTransform(&buffer[bufferPosition], bufferSize, note.frequency, newFrequency);
+            this->definition[noteIndex].frequency = newFrequency;
+            newFrequency = 0;
         } else {
-            #ifdef DEBUG
-            printf("noteSize larger then buffer, bufferPosition: %d, toEnd: %d, freq: %d\n", bufferPosition, bufferSize - bufferPosition, note.frequency);
-            #endif
-            this->wg->sine(&buffer[bufferPosition], bufferSize - bufferPosition, note.frequency);
-            #ifdef DEBUG
-            for (int z = bufferPosition; z < bufferSize; z++) {
-                printf("-- %d\t%d\n", z, ((int16_t *) buffer)[z * 2]);
+            if (noteSize <= (bufferSize - bufferPosition)) {
+#ifdef DEBUG
+                printf("noteSize smaller then buffer, bufferPosition: %d, noteSize: %d, freq: %d\n", bufferPosition, noteSize, note.frequency);
+#endif
+                this->wg->sine(&buffer[bufferPosition], noteSize, note.frequency);
+#ifdef DEBUG
+                for (int z = bufferPosition; z < bufferPosition + noteSize; z++) {
+                    printf("-- %d\t%d\n", z, ((int16_t *) buffer)[z * 2]);
+                }
+#endif
+            } else {
+#ifdef DEBUG
+                printf("noteSize larger then buffer, bufferPosition: %d, toEnd: %d, freq: %d\n", bufferPosition, bufferSize - bufferPosition, note.frequency);
+#endif
+                this->wg->sine(&buffer[bufferPosition], bufferSize - bufferPosition, note.frequency);
+#ifdef DEBUG
+                for (int z = bufferPosition; z < bufferSize; z++) {
+                    printf("-- %d\t%d\n", z, ((int16_t *) buffer)[z * 2]);
+                }
+#endif
             }
-            #endif
         }
 
         // smoothing -----------------------------------------------------------------------------------------------
@@ -79,11 +91,14 @@ uint32_t Melody::nextBuffer(uint32_t *buffer, uint32_t bufferSize) {
                 this->wg->adjustVolume(&buffer[bufferPosition], noteSize, (float)noteSize/SMOOTHING, 0.0f);
             }
         }
+
         // ---------------------------------------------------------------------------------------------------------
 
         if (noteSize <= (bufferSize - bufferPosition)) {
             bufferPosition += noteSize;
-            this->noteIndex++;
+            if (note.length_ms != 0) {
+                this->noteIndex++;
+            }
             this->noteOffset = 0;
         } else {
             this->noteOffset += bufferSize - bufferPosition;
@@ -92,6 +107,20 @@ uint32_t Melody::nextBuffer(uint32_t *buffer, uint32_t bufferSize) {
         }
     }
 
+    if (forceStop) {
+        // we end buffer with smoothed edge
+        this->wg->adjustVolume(&buffer[bufferSize - SMOOTHING], SMOOTHING, 1.0f, 0);
+        this->forceStopped = true;
+    }
+
+
     return bufferPosition;
 }
 
+void Melody::stop() {
+    this->forceStop = true;
+}
+
+void Melody::adjustFrequency(uint16_t frequency) {
+    this->newFrequency = frequency;
+}

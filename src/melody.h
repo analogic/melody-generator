@@ -8,7 +8,7 @@
 
 struct Note {
     uint16_t frequency;
-    uint16_t length_ms;
+    uint16_t length_ms; // 0 means infinite
     uint8_t edge_smoothing;
 };
 
@@ -21,13 +21,18 @@ public:
     WaveGenerator *wg;
     Melody(WaveGenerator *waveGenerator, Note *definition, uint32_t length);
     uint32_t nextBuffer(uint32_t *buffer, uint32_t bufferSize);
+    void stop();
+    void adjustFrequency(uint16_t frequency);
 private:
     Note *definition;
     uint32_t length;
 
-    bool end;
     uint32_t noteIndex;
     uint32_t noteOffset;
+
+    bool forceStop;
+    bool forceStopped;
+    uint16_t newFrequency;
 };
 
 #define NOTE_B0  31

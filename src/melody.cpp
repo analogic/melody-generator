@@ -4,7 +4,7 @@
 #define SMOOTHING 400
 //#define DEBUG
 
-Melody::Melody(WaveGenerator *waveGenerator, Note *definition, uint32_t length) {
+Beeper::Beeper(WaveGenerator *waveGenerator, Note *definition, uint32_t length) {
     this->definition = definition;
     this->length = length;
     this->noteIndex = 0;
@@ -16,7 +16,7 @@ Melody::Melody(WaveGenerator *waveGenerator, Note *definition, uint32_t length) 
     this->newFrequency = 0;
 }
 
-uint32_t Melody::nextBuffer(uint32_t *buffer, uint32_t bufferSize) {
+uint32_t Beeper::nextBuffer(uint32_t *buffer, uint32_t bufferSize) {
     uint32_t bufferPosition = 0;
 
 #ifdef DEBUG
@@ -119,10 +119,10 @@ uint32_t Melody::nextBuffer(uint32_t *buffer, uint32_t bufferSize) {
     return bufferPosition;
 }
 
-void Melody::stop() {
+void Beeper::stop() {
     this->forceStop = true;
 }
 
-void Melody::adjustFrequency(uint16_t frequency) {
+void Beeper::adjustFrequency(uint16_t frequency) {
     this->newFrequency = frequency;
 }

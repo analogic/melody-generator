@@ -84,8 +84,8 @@ uint32_t Beeper::nextBuffer(uint32_t *buffer, uint32_t bufferSize) {
             }
         }
         if (note.edge_smoothing == EDGE_FALLING || note.edge_smoothing == EDGE_BOTH) {
-            if (noteSize - SMOOTHING < bufferSize) {
-                uint32_t smoothingLength = bufferSize - (noteSize - SMOOTHING);
+            if (noteSize - SMOOTHING < (bufferSize - bufferPosition)) {
+                uint32_t smoothingLength = (bufferSize - bufferPosition) - (noteSize - SMOOTHING);
                 if (smoothingLength > SMOOTHING) smoothingLength = SMOOTHING;
                 this->wg->adjustVolume(&buffer[bufferPosition + noteSize - SMOOTHING], smoothingLength, 1.0f,
                                        (float) (SMOOTHING - smoothingLength) / SMOOTHING);
